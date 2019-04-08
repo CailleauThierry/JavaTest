@@ -67,10 +67,10 @@ public class SecretMessages03 {
 		System.out.println();
 		System.out.println(out);
 		
-		System.out.println("Please enter another secret message with the same key of \"" + (int)key + "\" or enter blank to exit");
+		System.out.println("Please enter another secret message with the same key of \"" + intKey + "\" or press ENTER to exit");
 		out = "";
 		message = scan.nextLine();
-		System.out.println("message.length() is: " + message.length());
+
 	}
 		
 		scan.close();
