@@ -98,11 +98,16 @@ public class SecretMessagesGUI extends JPanel {
 		btnNewButton.setBackground(new Color(51, 153, 255));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
+				
 				// get the message from txtIn
 				String message = txtIn.getText();
 				
 				// get the key amount from txtKey
 				int key = Integer.parseInt(txtKey.getText());
+				
+				// adding code to make the slider position match a number entered manually when pressing ENCODE / DECODE
+				slider.setValue(key);
 				
 				// encode that message with that key
 				String output = encode(message, key);
