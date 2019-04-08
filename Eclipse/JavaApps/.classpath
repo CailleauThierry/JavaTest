@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="GuessingGame01/src"/>
+	<classpathentry kind="src" path="HiLoCLI/src"/>
+	<classpathentry kind="output" path="GuessingGame01/bin"/>
+</classpath>
