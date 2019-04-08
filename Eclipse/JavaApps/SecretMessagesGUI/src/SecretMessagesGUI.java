@@ -12,6 +12,8 @@ import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import java.awt.Font;
+import java.awt.Color;
 
 public class SecretMessagesGUI extends JPanel {
 	private JTextField txtKey;
@@ -71,24 +73,29 @@ public class SecretMessagesGUI extends JPanel {
 	}
 	
 	public SecretMessagesGUI() {
+		setBackground(new Color(0, 102, 255));
 		setLayout(null);
 		
 		txtIn = new JTextArea();
+		txtIn.setBackground(new Color(204, 255, 255));
+		txtIn.setFont(new Font("Monospaced", Font.PLAIN, 16));
 		txtIn.setBounds(10, 11, 430, 110);
 		add(txtIn);
 		
 		JLabel lblKey = new JLabel("Key: ");
-		lblKey.setBounds(183, 142, 32, 14);
+		lblKey.setBounds(183, 147, 32, 14);
 		add(lblKey);
 		
 		txtKey = new JTextField();
 		txtKey.setHorizontalAlignment(SwingConstants.CENTER);
 		txtKey.setText("0");
-		txtKey.setBounds(215, 139, 38, 20);
+		txtKey.setBounds(215, 144, 38, 20);
 		add(txtKey);
 		txtKey.setColumns(10);
 		
 		JButton btnNewButton = new JButton("ENCODE / DECODE");
+		btnNewButton.setForeground(new Color(0, 0, 0));
+		btnNewButton.setBackground(new Color(51, 153, 255));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// get the message from txtIn
@@ -106,30 +113,45 @@ public class SecretMessagesGUI extends JPanel {
 				
 			}
 		});
-		btnNewButton.setBounds(255, 138, 171, 23);
+		btnNewButton.setBounds(263, 139, 171, 31);
 		add(btnNewButton);
 		
 		txtOut = new JTextArea();
-		txtOut.setBounds(10, 179, 430, 110);
+		txtOut.setBackground(new Color(102, 255, 204));
+		txtOut.setFont(new Font("Monospaced", Font.PLAIN, 16));
+		txtOut.setBounds(10, 185, 430, 124);
 		add(txtOut);
 		setPreferredSize(new Dimension(450,320));
 		
 		slider = new JSlider();
+		slider.setSnapToTicks(true);
+		slider.setBackground(new Color(51, 153, 255));
 		slider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				// anonymous inner class, adding aan emplty string to it ot's like casting to a String
+				// anonymous inner class, adding an empty string to it ot's like casting to a String
 				txtKey.setText("" + slider.getValue());
+				// since we want the slider to do same thing as Encode/Decode we copied the same calls
+				// get the message from txtIn
+				String message = txtIn.getText();
+				
+				// get the key amount from txtKey
+				int key = Integer.parseInt(txtKey.getText());
+				
+				// encode that message with that key
+				String output = encode(message, key);
+				
+				// show the message in txtOut
+				txtOut.setText(output);
 			}
 		});
 		slider.setPaintLabels(true);
 		slider.setMajorTickSpacing(13);
-		slider.setSnapToTicks(true);
 		slider.setMinorTickSpacing(1);
 		slider.setPaintTicks(true);
 		slider.setValue(0);
 		slider.setMinimum(-13);
 		slider.setMaximum(13);
-		slider.setBounds(20, 132, 148, 42);
+		slider.setBounds(20, 132, 148, 45);
 		add(slider);
 	}
 
