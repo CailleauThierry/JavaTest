@@ -1,4 +1,11 @@
 # JavaTest
 - This is the very first time I look into Java
   - Objective, running through "Java Programming for Kids" by Yakov Fain with my kid as he wants to become a Minecraft developer
-  - Also started the "java the easy way" course, uploaded the first android app generating working .apk first!
+  - Also started the "Java the easy way" course, uploaded the first android app generating working .apk first!
+    - Working BubbleDraw on Android
+    - Tested with Android Studio 3.3.1
+    - Build #AI-182.5107.16.33.5264788, built on January 28, 2019
+    - JRE: 1.8.0_152-release-1248-b01 amd64
+    - JVM: OpenJDK 64-Bit Server VM by JetBrains s.r.o
+    - Windows Server 2012 R2 6.3
+    - on Samsung S9+ (SM-G956F)
