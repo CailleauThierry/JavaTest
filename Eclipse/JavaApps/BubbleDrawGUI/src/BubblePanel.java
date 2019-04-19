@@ -70,8 +70,18 @@ public class BubblePanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				// get the bubble size
 				int newSize = Integer.parseInt(txtSize.getText());
+				// makes sure the size does not go under 1
+				if (newSize < 1) {
+					txtSize.setText("" + 0);
+					newSize = 0;
+				}
 				//get animation speed
 				int newSpeed = Integer.parseInt(txtSpeed.getText());
+				// makes sure the speed does not go under 1
+				if (newSpeed < 1) {
+					txtSpeed.setText("" + 0);
+					newSpeed = 0;
+				}
 				// set bubble size
 				size = newSize;
 				// set bubble speed
@@ -189,7 +199,14 @@ public class BubblePanel extends JPanel {
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
 			// Change the bubble size whenever the mouse wheel is moved
-			size -= e.getWheelRotation();
+			// Also forbid the size to be less than 1
+			if (size >= 0) {
+				size -= e.getWheelRotation();
+			}
+			else {
+				size = 0;
+			}
+			
 			
 			txtSize.setText("" + size);
 			
