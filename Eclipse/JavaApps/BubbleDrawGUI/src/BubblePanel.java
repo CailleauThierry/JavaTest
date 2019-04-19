@@ -28,6 +28,7 @@ public class BubblePanel extends JPanel {
 	private JTextField txtSize;
 	private JTextField txtSpeed;
 	private JCheckBox chkGroup;
+	private JCheckBox chkPause;
 
 	public BubblePanel() {
 		// to conclude the constructor you need the parenthesis ();
@@ -38,7 +39,7 @@ public class BubblePanel extends JPanel {
 		
 		timer = new Timer(DELAY, new BubbleListener());
 		
-		setBackground(Color.BLACK);
+		setBackground(new Color(204, 255, 255));
 		setPreferredSize(new Dimension(720,400));
 		
 		JPanel panel = new JPanel();
@@ -90,6 +91,22 @@ public class BubblePanel extends JPanel {
 		chkGroup = new JCheckBox("Group Bubbles");
 		chkGroup.setBackground(Color.CYAN);
 		panel.add(chkGroup);
+		
+		chkPause = new JCheckBox("Pause");
+		chkPause.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// action performed is when I "click" the checkbox
+				if(chkPause.isSelected()) {
+					timer.stop();
+				}
+				else {
+					timer.start();
+				}
+					
+			}
+		});
+		chkPause.setBackground(Color.CYAN);
+		panel.add(chkPause);
 		panel.add(btnClear);
 		// usually start the timer last
 		timer.start(); // will fire the action listener
@@ -121,7 +138,7 @@ public class BubblePanel extends JPanel {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			// Stops the animation when the mouse is pressed
-			timer.stop();
+			//timer.stop();
 			// We want to add to the bubbleList my mouse location
 			bubbleList.add(new Bubble(e.getX(),e.getY(),size));
 			repaint();
@@ -131,7 +148,7 @@ public class BubblePanel extends JPanel {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			// Starts the animation when the mouse is released
-			 timer.start();
+			// timer.start();
 		}
 
 		@Override
@@ -229,10 +246,11 @@ public class BubblePanel extends JPanel {
 			y += yspeed; 
 			
 			// collision detection part of the update, with the edges of the panel
-			if (x < 0 || x > getWidth()) {
+			//			page.fillOval(bubble.x - bubble.size/2, bubble.y - bubble.size/2, bubble.size, bubble.size);
+			if (x <= size / 2 || x + size / 2 >= getWidth()) {
 				xspeed = -1 * xspeed;
 			}
-			if (y < 0 || y > getHeight()) {
+			if (y <= size /2  || y + size / 2 >= getHeight()) {
 				yspeed = -yspeed;
 			}
 		}
