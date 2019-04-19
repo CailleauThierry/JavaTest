@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 
 public class BubblePanel extends JPanel {
 
@@ -24,8 +25,9 @@ public class BubblePanel extends JPanel {
 	private Timer timer;
 	// a constant is a "final int" in java
 	private final int DELAY = 33; // 33 ms of delay for 30 fps
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField txtSize;
+	private JTextField txtSpeed;
+	private JCheckBox chkGroup;
 
 	public BubblePanel() {
 		// to conclude the constructor you need the parenthesis ();
@@ -37,34 +39,57 @@ public class BubblePanel extends JPanel {
 		timer = new Timer(DELAY, new BubbleListener());
 		
 		setBackground(Color.BLACK);
-		setPreferredSize(new Dimension(600,400));
+		setPreferredSize(new Dimension(720,400));
 		
 		JPanel panel = new JPanel();
+		panel.setBackground(Color.CYAN);
 		add(panel);
 		
 		JLabel lblDotSize = new JLabel("Dot Size: ");
 		lblDotSize.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblDotSize);
 		
-		textField = new JTextField();
-		textField.setHorizontalAlignment(SwingConstants.CENTER);
-		textField.setText("30");
-		panel.add(textField);
-		textField.setColumns(3);
+		txtSize = new JTextField();
+		txtSize.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSize.setText("30");
+		panel.add(txtSize);
+		txtSize.setColumns(3);
 		
 		JLabel lblAnimationSpeedfps = new JLabel("Animation Speed (fps): ");
 		panel.add(lblAnimationSpeedfps);
 		
-		textField_1 = new JTextField();
-		textField_1.setHorizontalAlignment(SwingConstants.CENTER);
-		textField_1.setText("30");
-		panel.add(textField_1);
-		textField_1.setColumns(2);
+		txtSpeed = new JTextField();
+		txtSpeed.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSpeed.setText("30");
+		panel.add(txtSpeed);
+		txtSpeed.setColumns(2);
 		
 		JButton btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// get the bubble size
+				int newSize = Integer.parseInt(txtSize.getText());
+				//get animation speed
+				int newSpeed = Integer.parseInt(txtSpeed.getText());
+				// set bubble size
+				size = newSize;
+				// set bubble speed
+				timer.setDelay(1000/newSpeed);
+			}
+		});
 		panel.add(btnUpdate);
 		
 		JButton btnClear = new JButton("Clear");
+		btnClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				bubbleList = new ArrayList<Bubble>();
+				repaint();
+			}
+		});
+		
+		chkGroup = new JCheckBox("Group Bubbles");
+		chkGroup.setBackground(Color.CYAN);
+		panel.add(chkGroup);
 		panel.add(btnClear);
 		// usually start the timer last
 		timer.start(); // will fire the action listener
@@ -78,8 +103,8 @@ public class BubblePanel extends JPanel {
 		}
 		
 		// write the number of bubbles on screen
-		page.setColor(Color.GREEN);
-		page.drawString("Count: " + bubbleList.size(), 5, 15);
+		// page.setColor(Color.GREEN);
+		// page.drawString("Count: " + bubbleList.size(), 5, 15);
 	}
 		
 	private class BubbleListener implements MouseListener,
@@ -106,7 +131,7 @@ public class BubblePanel extends JPanel {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			// Starts the animation when the mouse is released
-			timer.start();
+			 timer.start();
 		}
 
 		@Override
@@ -125,6 +150,16 @@ public class BubblePanel extends JPanel {
 		public void mouseDragged(MouseEvent e) {
 			// We want to add to the bubbleList my mouse location
 			bubbleList.add(new Bubble(e.getX(),e.getY(),size));
+			
+			// check to see if the Group Bubbles checkbox is checked
+			
+			if (chkGroup.isSelected()) {
+				// set the xspeed and yspeed of this bubble to the previous speed
+				// "(bubbleList.size() - 1)" is the current bubble and "(bubbleList.size() - 2)" is the previous one
+				bubbleList.get(bubbleList.size() - 1).xspeed = bubbleList.get(bubbleList.size() - 2).xspeed;				
+				bubbleList.get(bubbleList.size() - 1).yspeed = bubbleList.get(bubbleList.size() - 2).yspeed;
+			}
+				
 			repaint();
 		}
 
@@ -138,6 +173,8 @@ public class BubblePanel extends JPanel {
 		public void mouseWheelMoved(MouseWheelEvent e) {
 			// Change the bubble size whenever the mouse wheel is moved
 			size -= e.getWheelRotation();
+			
+			txtSize.setText("" + size);
 			
 		}
 
