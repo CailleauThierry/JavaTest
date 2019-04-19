@@ -61,16 +61,17 @@ public class BubblePanel extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
+			// Stops the animation when the mouse is pressed
+			timer.stop();
 			// We want to add to the bubbleList my mouse location
 			bubbleList.add(new Bubble(e.getX(),e.getY(),size));
-			timer.stop();
 			repaint();
 			
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
+			// Starts the animation when the mouse is released
 			timer.start();
 		}
 
