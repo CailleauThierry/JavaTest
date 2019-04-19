@@ -63,6 +63,7 @@ public class BubblePanel extends JPanel {
 		public void mousePressed(MouseEvent e) {
 			// We want to add to the bubbleList my mouse location
 			bubbleList.add(new Bubble(e.getX(),e.getY(),size));
+			timer.stop();
 			repaint();
 			
 		}
@@ -70,7 +71,7 @@ public class BubblePanel extends JPanel {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+			timer.start();
 		}
 
 		@Override
