@@ -48,7 +48,7 @@ public class BubbleView extends ImageView implements View.OnTouchListener {
                 bubble.update();
             }
 
-            // redraw the screen
+            // redraw the screen, invalidate is like a paint component for the other applications
             invalidate();
         }
     };
@@ -68,7 +68,8 @@ public class BubbleView extends ImageView implements View.OnTouchListener {
         myPaint.setColor(Color.WHITE);
         myPaint.setTextSize(50);
         c.drawText("Count:" + bubbleList.size(), 5, 40, myPaint);
-
+        
+        // similar to a timer, just wakes up the thread after the DELAY
         h.postDelayed(r, DELAY);
     }
 
