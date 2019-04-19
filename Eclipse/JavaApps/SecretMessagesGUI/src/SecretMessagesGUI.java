@@ -55,7 +55,7 @@ public class SecretMessagesGUI extends JPanel {
 		   }
 		   if (in >= '0' && in <= '9') {
 			   // with a key of 12, 83 becomes :5 when we want it to stay a number. If we did not want it to stay a number (there are only 10 digits so that does not span 13) the modulo % operator would not be needed. The decrypting would have worked fine
-				in += (k % 10); // Ex: 13 % 10 is 3
+				in += (k % 10); // Ex: 13 % 10 is 3, so modulo insures the number stays between 0 and 9, so some numbers will be re-used for more than 1 encryption
 				if (in > '9')
 				{
 					//if the character went past 9 we wrap it around back to the beginning of the number range i.e. back 10 characters
