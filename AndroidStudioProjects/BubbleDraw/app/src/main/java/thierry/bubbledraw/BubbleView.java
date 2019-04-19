@@ -22,6 +22,7 @@ public class BubbleView extends ImageView implements View.OnTouchListener {
     private final int DELAY = 16;
     private Paint myPaint = new Paint();
     private Handler h;
+    private int size = 50;
 
     public BubbleView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -29,6 +30,8 @@ public class BubbleView extends ImageView implements View.OnTouchListener {
         bubbleList = new ArrayList<Bubble>();
         myPaint.setColor(Color.WHITE);
         h = new Handler();
+
+        // we set an ontouchlistener, similar to a mouse but with touch display
 
         this.setOnTouchListener(this);
         /*
@@ -68,8 +71,9 @@ public class BubbleView extends ImageView implements View.OnTouchListener {
         myPaint.setColor(Color.WHITE);
         myPaint.setTextSize(50);
         c.drawText("Count:" + bubbleList.size(), 5, 40, myPaint);
-        
-        // similar to a timer, just wakes up the thread after the DELAY
+        c.drawText("Size:" + size, 5, 85, myPaint);
+
+        // similar to a timer, just wakes up the thread after the DELAY. Also says "we are finished with this frame"
         h.postDelayed(r, DELAY);
     }
 
@@ -77,16 +81,23 @@ public class BubbleView extends ImageView implements View.OnTouchListener {
     public boolean onTouch(View v, MotionEvent event) {
         // handle multi-touch events
         if (event.getPointerCount() == 1) {
-            bubbleList.add(new Bubble((int) event.getX(), (int) event.getY(), (int) (Math.random() * 50 + 50)));
+            bubbleList.add(new Bubble((int) event.getX(), (int) event.getY(), size));
             if (bubbleList.size() > 1) {
                 bubbleList.get(bubbleList.size() - 1).xspeed = bubbleList.get(bubbleList.size() - 2).xspeed;
                 bubbleList.get(bubbleList.size() - 1).yspeed = bubbleList.get(bubbleList.size() - 2).yspeed;
             }
-        } else {
+        }
+
+        if (event.getPointerCount() == 2) {
+            size = (int) event.getAction();
+        }
+
+        else {
             for (int i = 0; i < event.getPointerCount(); i++) {
-                bubbleList.add(new Bubble((int) event.getX(i), (int) event.getY(i), (int) (Math.random() * 50 + 50)));
+                bubbleList.add(new Bubble((int) event.getX(i), (int) event.getY(i), size));
             }
         }
+        // if we wanted to use more touch events (for other application) we could return false
         return true;
     }
 
