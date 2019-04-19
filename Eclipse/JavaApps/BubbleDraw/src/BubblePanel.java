@@ -135,9 +135,18 @@ public class BubblePanel extends JPanel {
 			color = new Color(	(float)Math.random(),
 								(float)Math.random(),
 								(float)Math.random());
-			xspeed = (int) (Math.random() * MAX_SPEED * 2  - MAX_SPEED);
-			yspeed = (int) (Math.random() * MAX_SPEED * 2  - MAX_SPEED);
+			xspeed = NonZeroRandomSpeed();
+			yspeed = NonZeroRandomSpeed();
 			
+		}
+		
+		public int NonZeroRandomSpeed() {
+			// Takes final int MAX_SPEED but makes sure to return a non-zero random number
+			int returnedSpeed = 0;
+			while (returnedSpeed == 0) {
+				returnedSpeed = (int) (Math.random() * MAX_SPEED * 2  - MAX_SPEED);
+			}
+			return returnedSpeed;
 		}
 		
 		public void update() {
