@@ -1,28 +1,32 @@
 package thierry.bubbledraw;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.os.Handler;
 
 import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Created on 04_19_2019 by Thierry Cailleau with help from  https://github.com/mayuezhu 's implementation
+ * Android Studio 3.4
+ * Build #AI-183.5429.30.34.5452501, built on April 9, 2019
+ * JRE: 1.8.0_152-release-1343-b01 amd64
+ * JVM: OpenJDK 64-Bit Server VM by JetBrains s.r.o
+ * Windows Server 2012 R2 6.3
+ * Tested to work on Samsung S9+ (SM-G956F)
  */
-public class BubbleView extends ImageView implements View.OnTouchListener {
-    private List<Bubble> bubbleList;
+public class BubbleView extends ImageView implements View.OnTouchListener{
+    private ArrayList<Bubble> bubbleList;
     private final int DELAY = 16;
     private Paint myPaint = new Paint();
     private Handler h;
-    private int size = 50;
+    private int fingerDrawSize = 50;
+    private int fingerThickness = 250; // give a constant representing the min space btween 2 adult fingers touching
 
     public BubbleView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -34,12 +38,6 @@ public class BubbleView extends ImageView implements View.OnTouchListener {
         // we set an ontouchlistener, similar to a mouse but with touch display
 
         this.setOnTouchListener(this);
-        /*
-        // test the ability to draw bubbles
-        for (int i = 0; i < 100; i++) {
-            bubbleList.add(new Bubble((int)(Math.random() * 300), (int)(Math.random() * 400), 50));
-        }
-        */
     }
 
     private Runnable r = new Runnable() {
@@ -57,44 +55,36 @@ public class BubbleView extends ImageView implements View.OnTouchListener {
     };
 
     protected void onDraw(Canvas c) {
-        /*
-        // test the ability to draw bubbles
-        for (int i = 0; i < 100; i++) {
-            bubbleList.add(new Bubble((int)(Math.random() * 300), (int)(Math.random() * 400), 50));
-        }
-        */
         for (Bubble bubble : bubbleList) {
             myPaint.setColor(bubble.color);
-            c.drawOval(bubble.x - bubble.size / 2, bubble.y - bubble.size / 2, bubble.x + bubble.size / 2, bubble.y + bubble.size / 2, myPaint);
+            c.drawOval(bubble.x - (int)(bubble.size / 2), bubble.y - (int)(bubble.size / 2), bubble.x + (int)(bubble.size / 2), bubble.y + (int)(bubble.size / 2), myPaint);
         }
 
         myPaint.setColor(Color.WHITE);
         myPaint.setTextSize(50);
         c.drawText("Count:" + bubbleList.size(), 5, 40, myPaint);
-        c.drawText("Size:" + size, 5, 85, myPaint);
-
-        // similar to a timer, just wakes up the thread after the DELAY. Also says "we are finished with this frame"
+        c.drawText("Size:" + fingerDrawSize, 5, 85, myPaint);
         h.postDelayed(r, DELAY);
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch(View v, MotionEvent motionEvent) {
         // handle multi-touch events
-        if (event.getPointerCount() == 1) {
-            bubbleList.add(new Bubble((int) event.getX(), (int) event.getY(), size));
+        // first handles the 2 finger touch to change the size, by shrinking on X or Y axis
+        if (motionEvent.getPointerCount() == 2) fingerDrawSize = Math.min(Math.abs(((int)motionEvent.getX(0) - (int) motionEvent.getX(1) ) - fingerThickness),
+                                                                            Math.abs(((int)motionEvent.getY(0) - (int) motionEvent.getY(1) ) - fingerThickness));
+        // then handles the 1 finger touch to draw and stay in the same direction (drawing animated)
+        else if (motionEvent.getPointerCount() == 1) {
+            bubbleList.add(new Bubble((int) motionEvent.getX(), (int) motionEvent.getY(), fingerDrawSize));
             if (bubbleList.size() > 1) {
                 bubbleList.get(bubbleList.size() - 1).xspeed = bubbleList.get(bubbleList.size() - 2).xspeed;
                 bubbleList.get(bubbleList.size() - 1).yspeed = bubbleList.get(bubbleList.size() - 2).yspeed;
             }
         }
-
-        if (event.getPointerCount() == 2) {
-            size = (int) event.getAction();
-        }
-
+        // then handles the case where there 3 or more than 3 fingers and drawn random bubbles
         else {
-            for (int i = 0; i < event.getPointerCount(); i++) {
-                bubbleList.add(new Bubble((int) event.getX(i), (int) event.getY(i), size));
+            for (int n = 0;  n < motionEvent.getPointerCount(); n++) {
+                bubbleList.add(new Bubble((int) motionEvent.getX(n), (int) motionEvent.getY(n), (int) (Math.random() * 50 + 50)));
             }
         }
         // if we wanted to use more touch events (for other application) we could return false
@@ -102,9 +92,7 @@ public class BubbleView extends ImageView implements View.OnTouchListener {
     }
 
     private class Bubble {
-        /**
-         * A bubble needs an x,y location and a size
-         */
+        /** A bubble needs an x,y location and a size */
         public int x;
         public int y;
         public int size;
@@ -113,32 +101,33 @@ public class BubbleView extends ImageView implements View.OnTouchListener {
         public int yspeed;
         private final int MAX_SPEED = 10;
 
-        public Bubble(int newX, int newY, int newSize) {
+        public Bubble(int newX, int newY, int newSize){
             x = newX;
             y = newY;
             size = newSize;
             color = Color.argb((int) (Math.random() * 256),
                     (int) (Math.random() * 256),
-                    (int) (Math.random() * 256),
-                    (int) (Math.random() * 256));
+                    (int)(Math.random() * 256),
+                    (int)(Math.random() * 256) );
             xspeed = (int) (Math.random() * MAX_SPEED * 2 - MAX_SPEED);
             yspeed = (int) (Math.random() * MAX_SPEED * 2 - MAX_SPEED);
 
-            if (xspeed == 0 && yspeed == 0) {
+            if (xspeed == 0 && yspeed == 0)
+            {
                 xspeed = 1;
                 yspeed = 1;
             }
 
         }
 
-        public void update() {
+        public void update(){
             x += xspeed;
             y += yspeed;
 
             // collision detection with the edges of the panel
-            if (x <= size / 2 || x + size / 2 >= getWidth())
+            if ( x <= size / 2 || x + size / 2 >= getWidth() )
                 xspeed = -1 * xspeed;
-            if (y <= size / 2 || y + size / 2 >= getHeight())
+            if ( y <= size / 2 || y + size / 2 >= getHeight() )
                 yspeed = -yspeed;
 
         }

@@ -3,9 +3,10 @@
   - Objective, running through "Java Programming for Kids" by Yakov Fain with my kid as he wants to become a Minecraft developer
   - Also started the "Java the easy way" course, uploaded the first android app generating working .apk first!
     - Working BubbleDraw on Android
-    - Tested with Android Studio 3.3.1
-    - Build #AI-182.5107.16.33.5264788, built on January 28, 2019
-    - JRE: 1.8.0_152-release-1248-b01 amd64
+    - Created on 04_19_2019 by Thierry Cailleau with help from  https://github.com/mayuezhu 's implementation
+    - Android Studio 3.4
+    - Build #AI-183.5429.30.34.5452501, built on April 9, 2019
+    - JRE: 1.8.0_152-release-1343-b01 amd64
     - JVM: OpenJDK 64-Bit Server VM by JetBrains s.r.o
     - Windows Server 2012 R2 6.3
-    - on Samsung S9+ (SM-G956F)
+    - Tested to work on Samsung S9+ (SM-G956F)
