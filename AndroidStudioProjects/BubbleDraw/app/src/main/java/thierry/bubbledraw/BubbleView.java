@@ -26,7 +26,7 @@ public class BubbleView extends ImageView implements View.OnTouchListener{
     private Paint myPaint = new Paint();
     private Handler h;
     private int fingerDrawSize = 50;
-    private int fingerThickness = 250; // give a constant representing the min space btween 2 adult fingers touching
+    private final int fingerThickness = 50; // give a constant representing the min space between 2 adult fingers touching
 
     public BubbleView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -70,9 +70,10 @@ public class BubbleView extends ImageView implements View.OnTouchListener{
     @Override
     public boolean onTouch(View v, MotionEvent motionEvent) {
         // handle multi-touch events
-        // first handles the 2 finger touch to change the size, by shrinking on X or Y axis
-        if (motionEvent.getPointerCount() == 2) fingerDrawSize = Math.min(Math.abs(((int)motionEvent.getX(0) - (int) motionEvent.getX(1) ) - fingerThickness),
-                                                                            Math.abs(((int)motionEvent.getY(0) - (int) motionEvent.getY(1) ) - fingerThickness));
+        // first handles the 2 finger touch to change the size, by shrinking on X or Y axis > calculate the area (so no negative values)
+        if (motionEvent.getPointerCount() == 2) fingerDrawSize =
+                Math.abs((((int)motionEvent.getX(0) - (int) motionEvent.getX(1) )) / fingerThickness) *
+                Math.abs((((int)motionEvent.getY(0) - (int) motionEvent.getY(1) )) / fingerThickness);
         // then handles the 1 finger touch to draw and stay in the same direction (drawing animated)
         else if (motionEvent.getPointerCount() == 1) {
             bubbleList.add(new Bubble((int) motionEvent.getX(), (int) motionEvent.getY(), fingerDrawSize));
